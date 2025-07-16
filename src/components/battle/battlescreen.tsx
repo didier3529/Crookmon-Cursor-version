@@ -1,3 +1,20 @@
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from 'react'
+import { DuelTurnResult } from '../../types'
+import analyticsService from '../../services/analyticsservice'
+
+export interface BattleScreenHandle {
+  animateTurn: (result: DuelTurnResult) => void
+}
+
+export interface BattleScreenProps {}
+
 const BattleScreen = forwardRef<BattleScreenHandle, BattleScreenProps>(function BattleScreen(
   _,
   ref
@@ -26,7 +43,7 @@ const BattleScreen = forwardRef<BattleScreenHandle, BattleScreenProps>(function 
 
   useEffect(() => {
     if (!current) return
-    analyticsService.track('turn_animation_started', {
+    analyticsService.logEvent('turn_animation_started', {
       attacker: current.attacker.id,
       defender: current.defender.id,
       outcome: current.outcome,
@@ -64,34 +81,18 @@ const BattleScreen = forwardRef<BattleScreenHandle, BattleScreenProps>(function 
     <div className="battle-screen">
       <div className="player-area attacker-area" ref={attackerRef}>
         <div className="avatar">
-          <img
-            src={current?.attacker.avatarUrl || '/assets/placeholder.png'}
-            alt={current?.attacker.name || 'Attacker'}
-          />
+          <img src={current?.attacker.avatarUrl || '/assets/placeholder.png'} alt={current?.attacker.name || 'Attacker'} />
         </div>
         <div className="health-bar">
-          <div
-            className="health-fill"
-            style={{
-              width: `${current ? current.attacker.currentHpPercent : 100}%`,
-            }}
-          />
+          <div className="health-fill" style={{ width: `${current ? current.attacker.currentHpPercent : 100}%` }} />
         </div>
       </div>
       <div className="player-area defender-area" ref={defenderRef}>
         <div className="avatar">
-          <img
-            src={current?.defender.avatarUrl || '/assets/placeholder.png'}
-            alt={current?.defender.name || 'Defender'}
-          />
+          <img src={current?.defender.avatarUrl || '/assets/placeholder.png'} alt={current?.defender.name || 'Defender'} />
         </div>
         <div className="health-bar">
-          <div
-            className="health-fill"
-            style={{
-              width: `${current ? current.defender.currentHpPercent : 100}%`,
-            }}
-          />
+          <div className="health-fill" style={{ width: `${current ? current.defender.currentHpPercent : 100}%` }} />
         </div>
       </div>
     </div>

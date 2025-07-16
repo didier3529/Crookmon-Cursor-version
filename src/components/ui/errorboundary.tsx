@@ -1,12 +1,41 @@
-const { error, info } = this.state;
-    const { fallback, children } = this.props;
+import React, { Component, ErrorInfo, ReactNode } from 'react'
+
+export type FallbackRender = (error: Error, info: ErrorInfo | null) => ReactNode
+
+interface ErrorBoundaryProps {
+  fallback?: ReactNode | FallbackRender
+  children?: ReactNode
+}
+
+interface ErrorBoundaryState {
+  error: Error | null
+  info: ErrorInfo | null
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  state: ErrorBoundaryState = { error: null, info: null }
+
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    return { error }
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    this.setState({ error, info })
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('ErrorBoundary caught an error', error, info)
+    }
+  }
+
+  render() {
+    const { error, info } = this.state
+    const { fallback, children } = this.props
 
     if (error) {
       if (fallback) {
         if (typeof fallback === 'function') {
-          return (fallback as FallbackRender)(error, info);
+          return (fallback as FallbackRender)(error, info)
         }
-        return fallback;
+        return fallback
       }
 
       return (
@@ -26,11 +55,11 @@ const { error, info } = this.state;
             </details>
           )}
         </div>
-      );
+      )
     }
 
-    return children;
+    return <>{children}</>
   }
 }
 
-export default ErrorBoundary;
+export default ErrorBoundary
