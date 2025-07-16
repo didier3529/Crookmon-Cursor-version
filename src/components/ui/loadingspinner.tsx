@@ -1,3 +1,11 @@
+import { FC, useId } from 'react'
+
+interface LoadingSpinnerProps {
+  size?: number
+  color?: string
+  label?: string
+}
+
 const LoadingSpinner: FC<LoadingSpinnerProps> = ({
   size = 40,
   color = '#3498db',

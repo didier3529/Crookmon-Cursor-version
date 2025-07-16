@@ -1,4 +1,12 @@
-function Footer(): JSX.Element {
+import { FC, useCallback, useEffect, useState } from 'react'
+
+interface Toast {
+  message: string
+  type: 'success' | 'error' | 'info'
+  link?: string
+}
+
+const Footer: FC = () => {
   const [toast, setToast] = useState<Toast | null>(null);
 
   const showToast = useCallback((toast: Toast) => {

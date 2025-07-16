@@ -1,3 +1,6 @@
+import { FC, useEffect, useRef, useState } from 'react'
+import useAnalytics from '../../hooks/useanalytics'
+
 const srOnlyStyle: React.CSSProperties = {
   position: 'absolute',
   width: '1px',
@@ -10,7 +13,20 @@ const srOnlyStyle: React.CSSProperties = {
   border: 0,
 }
 
+interface AffiliateLinkBannerProps {
+  affiliateId: string
+}
+
+const styles = {
+  banner: 'affiliate-banner',
+  text: 'affiliate-banner-text',
+  controls: 'affiliate-banner-controls',
+  input: 'affiliate-banner-input',
+  button: 'affiliate-banner-button',
+}
+
 const AffiliateLinkBanner: FC<AffiliateLinkBannerProps> = ({ affiliateId }) => {
+  const { trackEvent } = useAnalytics()
   const [copied, setCopied] = useState(false)
   const timeoutRef = useRef<number>()
   const inputRef = useRef<HTMLInputElement>(null)

@@ -1,13 +1,32 @@
-function useCardSelect(card: CardTileProps['card'], onSelect: CardTileProps['onSelect']) {
+import { memo, useCallback } from 'react'
+import classNames from 'classnames'
+import useAnalytics from '../../hooks/useanalytics'
+
+interface Card {
+  id: string
+  name: string
+  imageUrl: string
+  attack: number
+  defense: number
+  rarity?: string
+}
+
+interface CardTileProps {
+  card: Card
+  onSelect: (card: Card) => void
+}
+
+function useCardSelect(card: CardTileProps['card'], onSelect: CardTileProps['onSelect'], trackEvent: (e: string, d?: Record<string, unknown>) => void) {
   return useCallback(() => {
     onSelect(card)
     trackEvent('CardSelected', { cardId: card.id })
-  }, [card, onSelect])
+  }, [card, onSelect, trackEvent])
 }
 
 const CardTile: React.FC<CardTileProps> = ({ card, onSelect }) => {
+  const { trackEvent } = useAnalytics()
   const { id, name, imageUrl, attack, defense, rarity } = card
-  const handleSelect = useCardSelect(card, onSelect)
+  const handleSelect = useCardSelect(card, onSelect, trackEvent)
 
   return (
     <button
@@ -37,3 +56,4 @@ const CardTile: React.FC<CardTileProps> = ({ card, onSelect }) => {
 }
 
 export default memo(CardTile)
+
