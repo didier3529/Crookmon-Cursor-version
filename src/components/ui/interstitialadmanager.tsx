@@ -1,4 +1,6 @@
-const AD_UNIT_PATH = process.env.REACT_APP_GPT_INTERSTITIAL_AD_UNIT_ID || '/1234567/default_interstitial';
+import { useEffect } from 'react'
+
+const AD_UNIT_PATH = process.env.REACT_APP_GPT_INTERSTITIAL_AD_UNIT_ID || '/1234567/default_interstitial'
 
 let interstitialSlot: googletag.Slot | null = null;
 let isAdLoaded = false;

@@ -1,3 +1,8 @@
+import { useCallback, useState } from 'react'
+import { Link } from 'react-router-dom'
+import useAnalytics from '../../hooks/useanalytics'
+import { useWinStreak } from '../../contexts/winstreakcontext'
+
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const winStreak = useWinStreak()
