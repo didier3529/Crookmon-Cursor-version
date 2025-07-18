@@ -1,8 +1,8 @@
 module.exports = {
   testEnvironment: 'node',
   testMatch: [
-    '**/__tests__/**/*.(js|jsx|ts|tsx)',
-    '**/*.(test|spec).(js|jsx|ts|tsx)',
+    '**/__tests__/**/*.{js,jsx,ts,tsx}',
+    '**/*.{test,spec}.{js,jsx,ts,tsx}',
   ],
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/*.d.ts'],
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup.js'],
