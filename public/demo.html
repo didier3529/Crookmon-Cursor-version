@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crookmon Demo</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
+    #log { white-space: pre-line; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Crookmon Engine Demo</h1>
+  <button id="start">Start Battle</button>
+  <div id="log"></div>
+  <script type="module">
+    import initializeBattle from '../src/core/engine/initializebattle.js';
+
+    const startBtn = document.getElementById('start');
+    const logEl = document.getElementById('log');
+
+    startBtn.addEventListener('click', () => {
+      logEl.textContent = '';
+      const battle = initializeBattle({
+        participants: [
+          { id: 'Player', hp: 20, attack: 6 },
+          { id: 'AI', hp: 20, attack: 6 }
+        ]
+      });
+
+      battle.on('action', ({ actor, target, damage }) => {
+        logEl.textContent += `${actor.id} hits ${target.id} for ${damage}\n`;
+      });
+
+      battle.on('end', state => {
+        const winner = state.participants.find(p => p.alive);
+        logEl.textContent += `Battle finished! Winner: ${winner?.id}`;
+      });
+
+      battle.start();
+    });
+  </script>
+</body>
+</html>
