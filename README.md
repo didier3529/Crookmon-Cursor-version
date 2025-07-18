@@ -61,6 +61,12 @@ npm install crookmon-game
 yarn add crookmon-game
 ```
 
+### Node Compatibility
+
+This library targets **Node.js 14+**. The analytics service relies on the
+`fetch` API. Node 18 and later include `fetch` natively. For Node 14 or 16,
+install a polyfill such as [`cross-fetch`](https://www.npmjs.com/package/cross-fetch).
+
 ---
 
 ## Quick Start
