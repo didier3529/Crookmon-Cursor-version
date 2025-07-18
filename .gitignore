@@ -1,5 +1,5 @@
 # Dependencies
-node_modules/
+# node_modules/  # COMMENTED OUT - Codex needs dependencies committed due to network restrictions
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -17,7 +17,7 @@ coverage/
 build/Release
 
 # Dependency directories
-node_modules/
+# node_modules/  # COMMENTED OUT - Codex needs dependencies committed due to network restrictions
 jspm_packages/
 
 # TypeScript v1 declaration files
