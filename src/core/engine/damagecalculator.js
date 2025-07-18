@@ -1,3 +1,5 @@
+import { getTypeEffectiveness } from '../data/types.js';
+
 function calculateCritical(attacker) {
   if (!attacker || !attacker.stats || typeof attacker.stats.speed !== 'number') {
     return { multiplier: 1, isCritical: false };
