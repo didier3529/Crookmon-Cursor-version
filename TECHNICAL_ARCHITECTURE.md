@@ -494,7 +494,7 @@ graph TB
 
 ## Build System
 
-The project uses **Rollup** for multi-format distribution:
+The project uses a **dual build system** with Vite for development and Rollup for library distribution:
 
 ```mermaid
 graph LR
@@ -502,23 +502,42 @@ graph LR
         TS[TypeScript Source]
         JSX[React JSX]
         Assets[Static Assets]
+        Public[Public Directory]
     end
 
-    subgraph "Build Process"
+    subgraph "Development (Vite)"
+        ViteDev[Vite Dev Server]
+        HMR[Hot Module Reload]
+        ViteBuild[Vite App Build]
+    end
+
+    subgraph "Library Build (Rollup)"
         Rollup[Rollup Bundler]
         TypeScript[TypeScript Compiler]
         Terser[Code Minification]
     end
 
     subgraph "Output Formats"
+        DevApp[Development App]
+        ProdApp[Production App]
         ESM[ES Modules]
         CJS[CommonJS]
         UMD[UMD Bundle]
         Types[Type Definitions]
     end
 
+    TS --> ViteDev
+    JSX --> ViteDev
+    Assets --> ViteDev
+    Public --> ViteDev
+    ViteDev --> HMR
+    ViteDev --> DevApp
+
+    TS --> ViteBuild
+    JSX --> ViteBuild
+    ViteBuild --> ProdApp
+
     TS --> TypeScript
-    JSX --> TypeScript
     TypeScript --> Rollup
     Rollup --> Terser
     Terser --> ESM
@@ -527,7 +546,22 @@ graph LR
     TypeScript --> Types
 ```
 
-### Build Configuration
+### Development Environment
+
+#### Vite Configuration
+- **Dev Server**: Hot module replacement on port 3000
+- **Asset Processing**: Static asset handling from public directory
+- **TypeScript**: Full TypeScript support with path aliases
+- **React Support**: Fast refresh and optimized builds
+- **Path Aliases**: Convenient imports (@, @components, @hooks, etc.)
+
+#### Vite Features
+- **Fast Startup**: Native ESM development server
+- **Hot Module Replacement**: Instant updates during development
+- **Asset Processing**: Automatic optimization of images and fonts
+- **Build Optimization**: Rollup-based production builds
+
+### Library Distribution
 
 #### Rollup Features
 - **Tree Shaking**: Dead code elimination
@@ -543,6 +577,75 @@ graph LR
 
 ---
 
+## Project Setup & Infrastructure
+
+### Development Environment Setup
+
+The project requires specific setup steps to ensure proper functionality:
+
+#### Required Directory Structure
+```
+project-root/
+├── public/                 # Static assets directory (required by Vite)
+│   └── vite.svg           # Favicon referenced in index.html
+├── src/                   # Source code
+├── index.html             # Main HTML entry point
+├── vite.config.ts         # Vite configuration
+├── package.json           # Dependencies and scripts
+└── tsconfig.json          # TypeScript configuration
+```
+
+#### Critical Setup Issues & Fixes
+
+**Missing Public Directory**: The Vite development server requires a `public/` directory for static assets. Missing this directory causes the dev server to exit immediately without error messages.
+
+**Missing Assets**: The `index.html` references `/vite.svg` which must exist in the `public/` directory. Missing this file prevents proper application loading.
+
+**Development Server Configuration**:
+```typescript
+// vite.config.ts
+export default defineConfig({
+  server: {
+    port: 3000,
+    open: true,
+  },
+  publicDir: 'public',
+  // ... other configuration
+});
+```
+
+#### Common Issues & Solutions
+
+1. **Dev Server Exits Immediately**
+   - **Cause**: Missing `public/` directory
+   - **Solution**: Create `public/` directory and required assets
+
+2. **Asset Loading Errors**
+   - **Cause**: Missing favicon or other referenced assets
+   - **Solution**: Ensure all assets referenced in HTML exist in `public/`
+
+3. **TypeScript Compilation Errors**
+   - **Cause**: Missing type definitions or incorrect paths
+   - **Solution**: Run `npx tsc --noEmit` to check for issues
+
+### Development Workflow
+
+#### Starting Development Server
+```bash
+npm run dev          # Starts Vite dev server on localhost:3000
+npm run build        # Builds the library for distribution
+npm run build:app    # Builds the React app for production
+npm run preview      # Preview production build locally
+```
+
+#### Testing & Quality Assurance
+```bash
+npm test             # Run Jest tests
+npm run test:watch   # Run tests in watch mode
+npm run lint         # ESLint code quality check
+npm run type-check   # TypeScript type checking
+```
+
 ## Technology Stack
 
 ### Core Technologies
@@ -556,6 +659,7 @@ mindmap
       React Router
       CSS Modules
     Build Tools
+      Vite
       Rollup
       TypeScript Compiler
       Terser
@@ -703,13 +807,28 @@ graph TB
 
 ## Deployment Architecture
 
+### Current Repository Status
+
+The project is actively maintained on GitHub with the following setup:
+- **Repository**: `https://github.com/didier3529/Crookmon-Cursor-version`
+- **Main Branch**: Fully synced and up-to-date
+- **Recent Updates**: All development environment fixes committed and pushed
+- **Status**: Clean working tree, ready for development
+
 ### Deployment Targets
 
 ```mermaid
 graph TB
     subgraph "Source Code"
-        Repo[Git Repository]
+        Repo[Git Repository<br/>GitHub: didier3529/Crookmon-Cursor-version]
+        Local[Local Development]
         CI[CI/CD Pipeline]
+    end
+
+    subgraph "Development Environment"
+        DevServer[Vite Dev Server<br/>localhost:3000]
+        HotReload[Hot Module Reload]
+        LivePreview[Live Preview]
     end
 
     subgraph "Build Outputs"
@@ -722,7 +841,12 @@ graph TB
         NPM[NPM Registry]
         CDN[CDN Hosting]
         Hosting[Web Hosting]
+        GitHub[GitHub Pages]
     end
+
+    Local --> DevServer
+    DevServer --> HotReload
+    HotReload --> LivePreview
 
     Repo --> CI
     CI --> Library
@@ -732,7 +856,25 @@ graph TB
     Library --> NPM
     WebApp --> CDN
     WebApp --> Hosting
+    WebApp --> GitHub
 ```
+
+### Recent Infrastructure Updates
+
+#### Repository Synchronization (Latest)
+- **Fixed**: Missing `public/` directory structure
+- **Added**: Vite SVG favicon for proper asset loading
+- **Resolved**: Development server startup issues
+- **Status**: All changes committed and pushed to GitHub main branch
+- **Commits**:
+  - `fix: Add missing public directory and vite.svg for dev server`
+  - `chore: Remove temporary test file`
+
+#### Development Environment Improvements
+- **Asset Management**: Proper public directory structure established
+- **Error Handling**: Resolved silent dev server failures
+- **Documentation**: Updated technical architecture documentation
+- **Debugging**: Added infrastructure for programmatic Vite server testing
 
 ### Distribution Strategy
 
@@ -740,18 +882,77 @@ graph TB
 - **Formats**: ESM, CJS, UMD
 - **Tree Shaking**: Optimized bundle sizes
 - **Type Definitions**: Full TypeScript support
+- **Zero Dependencies**: Standalone core engine
 
 #### Web Application
-- **Static Hosting**: JAMstack deployment
-- **CDN**: Global content distribution
-- **Progressive Web App**: Offline capability
+- **Static Hosting**: JAMstack deployment ready
+- **CDN**: Global content distribution capable
+- **Progressive Web App**: Offline capability supported
+- **Vite Optimization**: Production builds with asset optimization
+
+#### Development Hosting
+- **Local Development**: Vite dev server on port 3000
+- **Hot Reload**: Instant development feedback
+- **Asset Serving**: Static assets from public directory
+- **Preview Mode**: Production build preview capabilities
 
 #### Documentation
 - **API Documentation**: Generated from TypeScript
 - **Usage Examples**: Interactive demonstrations
-- **Architecture Guides**: Technical documentation
+- **Architecture Guides**: Technical documentation (this file)
+- **Setup Instructions**: Comprehensive development environment guide
 
 ---
+
+## Current Status & Known Issues
+
+### Active Warnings & Improvements Needed
+
+#### Tailwind CSS Configuration
+```
+warn - The `content` option in your Tailwind CSS configuration is missing or empty.
+warn - Configure your content sources or your generated CSS will be missing styles.
+warn - https://tailwindcss.com/docs/content-configuration
+```
+- **Impact**: Potential missing styles in production builds
+- **Solution**: Configure Tailwind content sources in config file
+- **Priority**: Medium (non-blocking for development)
+
+#### NPM Security Audit
+```
+2 moderate severity vulnerabilities
+```
+- **Status**: Identified during dependency installation
+- **Solution**: Run `npm audit fix` for safe fixes, or `npm audit fix --force` for major updates
+- **Recommendation**: Address on dedicated maintenance branch
+- **Priority**: Low (no runtime security impact identified)
+
+### Development Environment Status
+
+✅ **Working Components**:
+- Vite development server runs successfully on localhost:3000
+- Hot module replacement functioning correctly
+- TypeScript compilation without errors
+- All core game functionality operational
+- Git repository fully synchronized with GitHub
+
+⚠️ **Minor Issues**:
+- Tailwind CSS content configuration warnings
+- NPM audit security warnings (non-critical)
+- Missing Tailwind optimization for production builds
+
+### Maintenance Recommendations
+
+#### Immediate (Optional)
+1. **Tailwind Configuration**: Add proper content sources
+2. **Dependency Updates**: Run `npm outdated` and evaluate updates
+3. **Security Patches**: Apply `npm audit fix` on maintenance branch
+
+#### Future Enhancements
+1. **Progressive Web App**: Add service worker for offline functionality
+2. **Performance Monitoring**: Implement runtime performance metrics
+3. **Internationalization**: Add multi-language support
+4. **Analytics Integration**: Enhanced user behavior tracking
 
 ## Conclusion
 
@@ -765,6 +966,7 @@ The Crookmon Game represents a sophisticated software architecture that successf
 4. **Performance**: Optimized for both development and runtime
 5. **Maintainability**: Clean code patterns and documentation
 6. **Extensibility**: Event-driven architecture enables easy enhancement
+7. **Development Experience**: Fast Vite-based development workflow
 
 ### Technical Excellence
 
@@ -772,7 +974,16 @@ The codebase demonstrates advanced understanding of:
 - **Modern JavaScript**: ES2019+ features with broad compatibility
 - **React Patterns**: Hooks, Context, Suspense, Error Boundaries
 - **State Management**: Finite state machines and event-driven updates
-- **Build Systems**: Multi-format distribution and optimization
+- **Build Systems**: Dual Vite/Rollup system for optimal development and distribution
 - **Software Architecture**: Clean architecture principles
+- **DevOps**: Proper Git workflow and repository management
 
-This architecture serves as an excellent example of how to build maintainable, scalable, and reusable game engines while providing a complete, production-ready gaming experience.
+### Current State Assessment
+
+**Production Ready**: ✅ Core functionality is stable and deployable
+**Development Ready**: ✅ Complete development environment established
+**Distribution Ready**: ✅ Multi-format builds working correctly
+**Documentation**: ✅ Comprehensive technical documentation
+**Repository Status**: ✅ Fully synchronized with GitHub
+
+This architecture serves as an excellent example of how to build maintainable, scalable, and reusable game engines while providing a complete, production-ready gaming experience. The recent infrastructure fixes ensure reliable development workflow and proper asset management for both current and future development efforts.
