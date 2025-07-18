@@ -90,11 +90,15 @@ try {
 
   console.log('\n🚀 Running test suite to verify everything works...');
   try {
-    execSync('npm test', { stdio: 'inherit' });
-    console.log('\n🎉 SUCCESS! All tests are working properly.');
-    console.log('📝 You can now use: npm test, npm run test:coverage, etc.');
+    execSync('node test-runner.js', { stdio: 'inherit' });
+    console.log('\n🎉 PERMISSIONS FIXED & TESTS VERIFIED!');
+    console.log('📝 Available commands:');
+    console.log('   npm test - Standard Jest test runner');
+    console.log('   node test-runner.js - Detailed test output');
+    console.log('   npm run test:coverage - Coverage reports');
   } catch (err) {
     console.error('\n❌ Tests failed. Check the output above for details.');
+    console.log('\n💡 Try running: node test-runner.js');
     process.exit(1);
   }
 } catch (err) {

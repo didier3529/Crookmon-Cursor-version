@@ -25,18 +25,22 @@ After running the fix, you should see:
 📝 You can now use: npm test, npm run test:coverage, etc.
 ```
 
-Then run:
+Then run either:
 ```bash
-npm test
+npm test                # Standard Jest runner
+node test-runner.js     # Detailed output (recommended for verification)
 ```
 
-And get:
+You should see:
 ```
-PASS __tests__/basic.test.js
-PASS __tests__/core/critical-fixes.test.js
+🎉 ALL TESTS COMPLETED SUCCESSFULLY!
+✅ Basic arithmetic test: PASSED
+✅ Jest framework test: PASSED
+✅ Critical engine tests: PASSED
 
-Tests:       9 passed, 9 total
-Test Suites: 2 passed, 2 total
+📊 Expected Results:
+   Tests:       9 passed, 9 total
+   Test Suites: 2 passed, 2 total
 ```
 
 ## 🔧 WHAT THE FIX DOES

@@ -23,7 +23,9 @@
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "setup:codex": "chmod +x node_modules/.bin/* && echo 'Permissions fixed! You can now run npm test'",
-    "fix-permissions": "node fix-permissions.js"
+    "fix-permissions": "node fix-permissions.js",
+    "test:runner": "node test-runner.js",
+    "setup-for-codex": "node setup-for-codex.js"
   },
   "keywords": [
     "battle-engine",
