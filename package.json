@@ -22,7 +22,8 @@
     "test:ci": "jest --ci --coverage --watchAll=false",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "setup:codex": "chmod +x node_modules/.bin/* && echo 'Permissions fixed! You can now run npm test'"
+    "setup:codex": "chmod +x node_modules/.bin/* && echo 'Permissions fixed! You can now run npm test'",
+    "fix-permissions": "node fix-permissions.js"
   },
   "keywords": [
     "battle-engine",

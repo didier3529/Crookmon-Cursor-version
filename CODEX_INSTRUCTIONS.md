@@ -12,14 +12,21 @@ This repository now includes **ALL dependencies committed** so you can test with
    ```
 
 2. **Fix Permissions** (required for Unix systems like Codex):
+
+   **Option A** - Node.js script (recommended):
+   ```bash
+   node fix-permissions.js
+   ```
+
+   **Option B** - NPM script:
+   ```bash
+   npm run fix-permissions
+   ```
+
+   **Option C** - Shell script:
    ```bash
    chmod +x setup-codex.sh
    ./setup-codex.sh
-   ```
-
-   **OR** use the npm script:
-   ```bash
-   npm run setup:codex
    ```
 
 3. **Run Tests** (after setup):
@@ -44,13 +51,14 @@ This repository now includes **ALL dependencies committed** so you can test with
 ## 📋 AVAILABLE COMMANDS
 
 ```bash
-npm run setup:codex        # Fix permissions (run this first!)
+node fix-permissions.js    # Fix permissions (recommended - run this first!)
+npm run fix-permissions    # Alternative permissions fix
 npm test                   # Run all tests
 npm run test:watch         # Run tests in watch mode
 npm run test:coverage      # Run tests with coverage
 npm run test:verbose       # Run tests with detailed output
 node run-tests.js          # Verification script
-./setup-codex.sh           # Alternative setup script
+./setup-codex.sh           # Shell script alternative
 ```
 
 ## 🔧 WHY THIS WORKS
