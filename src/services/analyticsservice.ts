@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch'
+
 export interface AnalyticsEvent {
   eventName: string
   data?: Record<string, unknown>
