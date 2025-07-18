@@ -21,7 +21,8 @@
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --watchAll=false",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "setup:codex": "chmod +x node_modules/.bin/* && echo 'Permissions fixed! You can now run npm test'"
   },
   "keywords": [
     "battle-engine",

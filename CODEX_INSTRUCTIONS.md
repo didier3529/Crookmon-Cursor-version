@@ -11,12 +11,23 @@ This repository now includes **ALL dependencies committed** so you can test with
    cd Crookmon-Cursor-version
    ```
 
-2. **Run Tests IMMEDIATELY** (no npm install needed!):
+2. **Fix Permissions** (required for Unix systems like Codex):
+   ```bash
+   chmod +x setup-codex.sh
+   ./setup-codex.sh
+   ```
+
+   **OR** use the npm script:
+   ```bash
+   npm run setup:codex
+   ```
+
+3. **Run Tests** (after setup):
    ```bash
    npm test
    ```
 
-3. **Verify Everything Works**:
+4. **Verify Everything Works**:
    ```bash
    npm run test:coverage
    ```
@@ -33,18 +44,22 @@ This repository now includes **ALL dependencies committed** so you can test with
 ## 📋 AVAILABLE COMMANDS
 
 ```bash
-npm test                    # Run all tests
+npm run setup:codex        # Fix permissions (run this first!)
+npm test                   # Run all tests
 npm run test:watch         # Run tests in watch mode
 npm run test:coverage      # Run tests with coverage
 npm run test:verbose       # Run tests with detailed output
 node run-tests.js          # Verification script
+./setup-codex.sh           # Alternative setup script
 ```
 
 ## 🔧 WHY THIS WORKS
 
 **Before**: Codex couldn't run tests due to network restrictions preventing `npm install`
 
-**Now**: All `node_modules` committed to repository = instant testing capability!
+**Issue Found**: Even with `node_modules` committed, executable permissions are lost on Unix systems
+
+**Now**: `setup-codex.sh` fixes permissions + all dependencies included = full testing capability!
 
 ## 🎯 EXPECTED OUTPUT
 
