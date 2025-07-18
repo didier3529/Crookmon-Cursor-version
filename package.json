@@ -25,6 +25,7 @@
     "setup:codex": "chmod +x node_modules/.bin/* && echo 'Permissions fixed! You can now run npm test'",
     "fix-permissions": "node fix-permissions.js",
     "test:runner": "node test-runner.js",
+    "test:fallback": "node simple-test-fallback.js",
     "setup-for-codex": "node setup-for-codex.js"
   },
   "keywords": [

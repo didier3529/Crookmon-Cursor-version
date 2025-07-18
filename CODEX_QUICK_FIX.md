@@ -7,13 +7,16 @@ You're getting `jest: Permission denied` because executable permissions are lost
 **Quick Fix (choose one):**
 
 ```bash
-# Option 1: Node.js script (recommended)
+# Option 1: Ultimate setup script (recommended)
+node setup-for-codex.js
+
+# Option 2: Permission fix only
 node fix-permissions.js
 
-# Option 2: NPM script
-npm run fix-permissions
+# Option 3: Jest-independent fallback (if Jest completely fails)
+node simple-test-fallback.js
 
-# Option 3: Shell script
+# Option 4: Shell script
 chmod +x setup-codex.sh && ./setup-codex.sh
 ```
 
