@@ -69,15 +69,23 @@ try {
   // Test Jest execution
   console.log('\n🧪 Testing Jest execution...');
   try {
-    const jestVersion = execSync('./node_modules/.bin/jest --version', {
+    const jestCmd =
+      process.platform === 'win32'
+        ? 'node_modules\\.bin\\jest.cmd --version'
+        : './node_modules/.bin/jest --version';
+
+    const jestVersion = execSync(jestCmd, {
       encoding: 'utf8',
       stdio: 'pipe',
     }).trim();
     console.log(`✅ Jest version: ${jestVersion}`);
   } catch (err) {
     console.error('❌ Jest execution test failed:', err.message);
-    console.log('\n💡 Try running: npm run setup:codex');
-    process.exit(1);
+    console.log('\n💡 Try running: npm test');
+    // Don't exit on Windows - npm test should still work
+    if (process.platform !== 'win32') {
+      process.exit(1);
+    }
   }
 
   console.log('\n🚀 Running test suite to verify everything works...');
