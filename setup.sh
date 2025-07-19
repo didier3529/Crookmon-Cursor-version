@@ -88,6 +88,23 @@ if [ "$(uname -s 2>/dev/null || echo Unknown)" = "Linux" ]; then
 fi
 
 ########################################################################
+# 3.6. Ensure esbuild binary on Windows (offline)
+########################################################################
+if [[ "$(uname -s 2>/dev/null || echo Unknown)" =~ MINGW|MSYS|CYGWIN ]] || [ "$OS" = "Windows_NT" ]; then
+  if [ ! -d "node_modules/@esbuild/win32-x64" ]; then
+    if [ -f "vendor/esbuild-win32-x64-0.25.7.tgz" ]; then
+      info "Extracting pre-packed esbuild-win32-x64 binary (offline)"
+      tar -xzf vendor/esbuild-win32-x64-0.25.7.tgz -C node_modules
+      pass "esbuild-win32-x64 unpacked"
+    else
+      info "No pre-packed Windows esbuild binary found – dev server may fail on Windows."
+    fi
+  else
+    pass "esbuild-win32-x64 already present"
+  fi
+fi
+
+########################################################################
 # 4. Quick smoke test – is Jest runnable?
 ########################################################################
 if [ -x "node_modules/.bin/jest" ]; then
@@ -98,6 +115,24 @@ if [ -x "node_modules/.bin/jest" ]; then
   fi
 else
   info "Jest binary not found – tests may not be runnable (offline registry?)"
+fi
+
+########################################################################
+# 5. Vite dev server smoke test
+########################################################################
+if command -v npx >/dev/null 2>&1; then
+  info "Running Vite preview smoke test (port 4321)"
+  npx vite preview --port 4321 --strictPort &
+  VITE_PID=$!
+  sleep 8
+  if curl -sf http://localhost:4321 >/dev/null 2>&1; then
+    pass "Vite served index.html successfully"
+  else
+    fail "Vite preview failed to respond – dev server may not work"
+    kill $VITE_PID 2>/dev/null || true
+    exit 1
+  fi
+  kill $VITE_PID 2>/dev/null || true
 fi
 
 echo ""
