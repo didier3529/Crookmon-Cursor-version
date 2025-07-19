@@ -70,6 +70,24 @@ else
 fi
 
 ########################################################################
+# 3.5. Fix known Vite/esbuild mismatch in offline Linux environments
+########################################################################
+if [ "$(uname -s 2>/dev/null || echo Unknown)" = "Linux" ]; then
+  if node -e "require.resolve ? console.log('') : 0" 2>/dev/null; then :; fi
+  if [ ! -d "node_modules/@esbuild/linux-x64" ]; then
+    if [ -f "vendor/esbuild-linux-x64-0.25.7.tgz" ]; then
+      info "Extracting pre-packed esbuild-linux-x64 binary (offline)"
+      tar -xzf vendor/esbuild-linux-x64-0.25.7.tgz -C node_modules
+      pass "esbuild-linux-x64 unpacked"
+    else
+      info "No pre-packed esbuild binary found – Vite may fail on Linux."
+    fi
+  else
+    pass "esbuild-linux-x64 already present"
+  fi
+fi
+
+########################################################################
 # 4. Quick smoke test – is Jest runnable?
 ########################################################################
 if [ -x "node_modules/.bin/jest" ]; then
